@@ -1,10 +1,9 @@
 #ifndef CUSTOMGLWIDGET_H
 #define CUSTOMGLWIDGET_H
 
-#include <QGLWidget>
-#include <QtOpenGL>
+#include <QOpenGLWidget>
 
-class CustomGLWidget : public QGLWidget
+class CustomGLWidget : public QOpenGLWidget
 {
     Q_OBJECT
 public:

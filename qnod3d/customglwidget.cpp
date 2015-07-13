@@ -1,12 +1,12 @@
 #include "customglwidget.h"
 
 CustomGLWidget::CustomGLWidget(QWidget *parent) :
-    QGLWidget(parent)
+    QOpenGLWidget(parent)
 {
 }
 
 void CustomGLWidget::initializeGL() {
-    qglClearColor(Qt::red);
+    glClearColor(1.0,0.0,0.0,1.0);
     glEnable(GL_DEPTH_TEST);
 }
 

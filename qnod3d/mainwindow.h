@@ -2,15 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtGui/QOpenGLFunctions>
-#include <QGLWidget>
-#include <QtOpenGL>
+#include <QOpenGLWidget>
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow, protected QOpenGLFunctions
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
@@ -20,7 +18,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QGLWidget *qglwidget;
+    QOpenGLWidget *qglwidget;
 };
 
 #endif // MAINWINDOW_H
