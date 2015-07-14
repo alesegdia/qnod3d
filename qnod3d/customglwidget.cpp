@@ -53,6 +53,7 @@ void CustomGLWidget::paintGL() {
     m_program.setUniformValue("mvp_matrix", m_projection * matrix);
     m_program.setUniformValue("texture", 0);
     m_program.setUniformValue("node_size", m_nodeSize);
+    m_program.bind();
     m_geometries->drawNodeGeometry();
 }
 
