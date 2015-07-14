@@ -2,6 +2,7 @@
 
 #include <QVector2D>
 #include <QVector3D>
+#include <QBuffer>
 
 struct VertexData
 {
@@ -106,7 +107,6 @@ void GeometryEngine::initNodeGeometry(QOpenGLShaderProgram *program)
     program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
 
     m_modelsBuffer.bind();
-    m_modelsBuffer.allocate(4*sizeof(QVector4D));
 
     int modelLocation = program->attributeLocation("a_modelMatrix");
 
@@ -125,8 +125,24 @@ void GeometryEngine::drawNodeGeometry()
 {
     m_vao->bind();
     m_modelsBuffer.bind();
+
+    QBuffer buf;
+    buf.open(QIODevice::WriteOnly);
+
+    int m44size = 4 * sizeof(QVector4D);
     QMatrix4x4 m;
+
     m.setToIdentity();
-    m_modelsBuffer.write(0,m.constData(),4*sizeof(QVector4D));
-    m_gl330->glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 34, 1);
+    m.translate(-0.5,0,0);
+    buf.write(((char*)m.constData()), m44size);
+
+    m.setToIdentity();
+    m.translate(0.5,0,0);
+    buf.write(((char*)m.constData()), m44size);
+
+    buf.close();
+
+    m_modelsBuffer.allocate(buf.data().constData(), 4*sizeof(QVector4D)*2);
+    m_gl330->glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 34, 2);
+
 }
