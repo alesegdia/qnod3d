@@ -15,7 +15,7 @@ varying vec2 v_texcoord;
 void main()
 {
     a_position.xy = a_position.xy * node_size;
-    gl_Position = mvp_matrix * a_position;
+    gl_Position = a_modelMatrix * mvp_matrix * a_position;
 
     v_texcoord = a_texcoord;
 }
