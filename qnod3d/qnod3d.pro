@@ -1,19 +1,10 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2015-07-13T02:11:32
-#
-#-------------------------------------------------
-
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui widgets
 
 TARGET = qnod3d
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     customglwidget.cpp \
     geometryengine.cpp \
     nodefactory.cpp
@@ -24,3 +15,9 @@ HEADERS  += mainwindow.h \
     nodefactory.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES +=
+
+RESOURCES += \
+    shaders.qrc \
+    textures.qrc
