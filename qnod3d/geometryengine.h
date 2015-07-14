@@ -4,20 +4,22 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLVertexArrayObject>
 
 class GeometryEngine : protected QOpenGLFunctions
 {
 public:
-    GeometryEngine();
+    GeometryEngine(QOpenGLShaderProgram *program);
     virtual ~GeometryEngine();
 
-    void drawNodeGeometry(QOpenGLShaderProgram *program);
+    void drawNodeGeometry();
 
 private:
-    void initNodeGeometry();
+    void initNodeGeometry(QOpenGLShaderProgram *program);
 
     QOpenGLBuffer arrayBuf;
     QOpenGLBuffer indexBuf;
+    QOpenGLVertexArrayObject* m_vao;
 
 };
 
