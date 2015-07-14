@@ -33,6 +33,7 @@ private:
     QOpenGLShaderProgram m_program;
     GeometryEngine *m_geometries;
     QMatrix4x4 m_projection;
+    QMatrix4x4 m_view;
     QOpenGLTexture *m_texture;
     QQuaternion m_rotation;
 
