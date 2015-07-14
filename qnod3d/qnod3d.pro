@@ -21,3 +21,5 @@ DISTFILES +=
 RESOURCES += \
     shaders.qrc \
     textures.qrc
+
+CONFIG += c++11
