@@ -18,8 +18,9 @@ public:
 private:
     void initNodeGeometry(QOpenGLShaderProgram *program);
 
-    QOpenGLBuffer arrayBuf;
-    QOpenGLBuffer indexBuf;
+    QOpenGLBuffer m_arrayBuf;
+    QOpenGLBuffer m_indexBuf;
+    QOpenGLBuffer m_modelsBuffer;
     QOpenGLVertexArrayObject* m_vao;
     QOpenGLFunctions_3_3_Core* m_gl330;
 

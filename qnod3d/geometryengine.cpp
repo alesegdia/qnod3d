@@ -11,21 +11,24 @@ struct VertexData
 
 //! [0]
 GeometryEngine::GeometryEngine(QOpenGLShaderProgram *program, QOpenGLFunctions_3_3_Core *gl330)
-    : indexBuf(QOpenGLBuffer::IndexBuffer)
+    : m_indexBuf(QOpenGLBuffer::IndexBuffer),
+      m_arrayBuf(QOpenGLBuffer::VertexBuffer),
+      m_modelsBuffer(QOpenGLBuffer::VertexBuffer)
 {
     initializeOpenGLFunctions();
 
     this->m_gl330 = gl330;
-    arrayBuf.create();
-    indexBuf.create();
+    m_arrayBuf.create();
+    m_indexBuf.create();
+    m_modelsBuffer.create();
 
     initNodeGeometry(program);
 }
 
 GeometryEngine::~GeometryEngine()
 {
-    arrayBuf.destroy();
-    indexBuf.destroy();
+    m_arrayBuf.destroy();
+    m_indexBuf.destroy();
 }
 //! [0]
 
@@ -84,11 +87,11 @@ void GeometryEngine::initNodeGeometry(QOpenGLShaderProgram *program)
     m_vao->create();
     m_vao->bind();
 
-    arrayBuf.bind();
-    arrayBuf.allocate(vertices, 24 * sizeof(VertexData));
+    m_arrayBuf.bind();
+    m_arrayBuf.allocate(vertices, 24 * sizeof(VertexData));
 
-    indexBuf.bind();
-    indexBuf.allocate(indices, 34 * sizeof(GLushort));
+    m_indexBuf.bind();
+    m_indexBuf.allocate(indices, 34 * sizeof(GLushort));
 
     quintptr offset = 0;
 
@@ -102,21 +105,28 @@ void GeometryEngine::initNodeGeometry(QOpenGLShaderProgram *program)
     program->enableAttributeArray(texcoordLocation);
     program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
 
-    /*
-    offset += sizeof(QVector2D);
+    m_modelsBuffer.bind();
+    m_modelsBuffer.allocate(4*sizeof(QVector4D));
+
     int modelLocation = program->attributeLocation("a_modelMatrix");
+
     for( int i = 0; i < 4; i++ ) {
-        program->setAttributeBuffer(modelLocation+i, GL_FLOAT, offset + i*sizeof(QVector4D), 4, 4*sizeof(QVector4D));
-        program->enableAttributeArray(modelLocation+i);
-        //glVertexAttribDivisor(modelLocation+i,1);
+        program->enableAttributeArray( modelLocation + i );
+        program->setAttributeBuffer( modelLocation + i, GL_FLOAT, i * sizeof(QVector4D), 4, 4 * sizeof(QVector4D) );
+        m_gl330->glVertexAttribDivisor( modelLocation + i, 1 );
     }
-    */
+
+    m_modelsBuffer.release();
+    m_vao->release();
+    program->release();
 }
 
-//! [2]
 void GeometryEngine::drawNodeGeometry()
 {
     m_vao->bind();
-    m_gl330->glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
+    m_modelsBuffer.bind();
+    QMatrix4x4 m;
+    m.setToIdentity();
+    m_modelsBuffer.write(0,m.constData(),4*sizeof(QVector4D));
+    m_gl330->glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 34, 1);
 }
-//! [2]
