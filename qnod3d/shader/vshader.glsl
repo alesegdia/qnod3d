@@ -6,8 +6,9 @@ precision mediump float;
 uniform mat4 mvp_matrix;
 uniform vec2 node_size;
 
-attribute vec4 a_position;
-attribute vec2 a_texcoord;
+in vec4 a_position;
+in vec2 a_texcoord;
+in mat4 a_modelMatrix;
 
 varying vec2 v_texcoord;
 
