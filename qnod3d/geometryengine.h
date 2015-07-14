@@ -5,11 +5,12 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
+#include <QOpenGLFunctions_3_3_Core>
 
 class GeometryEngine : protected QOpenGLFunctions
 {
 public:
-    GeometryEngine(QOpenGLShaderProgram *program);
+    GeometryEngine(QOpenGLShaderProgram *program, QOpenGLFunctions_3_3_Core *gl330);
     virtual ~GeometryEngine();
 
     void drawNodeGeometry();
@@ -20,6 +21,8 @@ private:
     QOpenGLBuffer arrayBuf;
     QOpenGLBuffer indexBuf;
     QOpenGLVertexArrayObject* m_vao;
+    QOpenGLFunctions_3_3_Core* m_gl330;
+
 
 };
 

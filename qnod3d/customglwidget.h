@@ -7,6 +7,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include <QQuaternion>
+#include <QOpenGLFunctions_3_3_Core>
 
 #include "geometryengine.h"
 
@@ -40,6 +41,9 @@ private:
     bool m_pressed = false;
     QVector2D m_mousePressPosition;
     QVector2D m_nodeSize = QVector2D(2,3);
+
+    QOpenGLFunctions_3_3_Core *m_gl330;
+
 
 };
 

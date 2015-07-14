@@ -8,8 +8,11 @@ CustomGLWidget::CustomGLWidget(QWidget *parent) :
     m_texture(0)
 {
     QSurfaceFormat format;
+    format.setVersion(3,3);
     format.setDepthBufferSize(24);
+    format.setProfile(QSurfaceFormat::CoreProfile);
     setFormat(format);
+    create();
 }
 
 CustomGLWidget::~CustomGLWidget()
@@ -22,12 +25,13 @@ CustomGLWidget::~CustomGLWidget()
 
 void CustomGLWidget::initializeGL() {
     initializeOpenGLFunctions();
+    m_gl330 = context()->versionFunctions<QOpenGLFunctions_3_3_Core>();
     glClearColor(0.0,0.0,0.0,1.0);
     initShaders();
     initTextures();
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    m_geometries = new GeometryEngine(&(this->m_program));
+    m_geometries = new GeometryEngine(&(this->m_program), m_gl330);
 
 }
 

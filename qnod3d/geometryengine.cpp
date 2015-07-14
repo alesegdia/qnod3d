@@ -10,11 +10,12 @@ struct VertexData
 };
 
 //! [0]
-GeometryEngine::GeometryEngine(QOpenGLShaderProgram *program)
+GeometryEngine::GeometryEngine(QOpenGLShaderProgram *program, QOpenGLFunctions_3_3_Core *gl330)
     : indexBuf(QOpenGLBuffer::IndexBuffer)
 {
     initializeOpenGLFunctions();
 
+    this->m_gl330 = gl330;
     arrayBuf.create();
     indexBuf.create();
 
@@ -101,12 +102,21 @@ void GeometryEngine::initNodeGeometry(QOpenGLShaderProgram *program)
     program->enableAttributeArray(texcoordLocation);
     program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
 
+    /*
+    offset += sizeof(QVector2D);
+    int modelLocation = program->attributeLocation("a_modelMatrix");
+    for( int i = 0; i < 4; i++ ) {
+        program->setAttributeBuffer(modelLocation+i, GL_FLOAT, offset + i*sizeof(QVector4D), 4, 4*sizeof(QVector4D));
+        program->enableAttributeArray(modelLocation+i);
+        //glVertexAttribDivisor(modelLocation+i,1);
+    }
+    */
 }
 
 //! [2]
 void GeometryEngine::drawNodeGeometry()
 {
     m_vao->bind();
-    glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
+    m_gl330->glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
 }
 //! [2]
