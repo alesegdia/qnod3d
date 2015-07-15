@@ -11,6 +11,12 @@
 
 #include "geometryengine.h"
 
+enum ToolMode {
+    SCN_TRANSLATE,
+    SCN_ROTATE,
+    SCN_SCALE
+};
+
 class CustomGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
@@ -37,12 +43,27 @@ private:
     QMatrix4x4 m_view;
     QOpenGLTexture *m_texture;
     QQuaternion m_rotation;
+    QVector3D m_position;
 
     bool m_pressed = false;
     QVector2D m_mousePressPosition;
     QVector2D m_nodeSize = QVector2D(2,3);
 
     QOpenGLFunctions_3_3_Core *m_gl330;
+    ToolMode toolMode;
+
+public slots:
+    void setTranslateSceneMode(bool k) {
+        toolMode = ToolMode::SCN_TRANSLATE;
+    }
+
+    void setRotateSceneMode(bool k) {
+        toolMode = ToolMode::SCN_ROTATE;
+    }
+
+    void setScaleSceneMode(bool k) {
+        toolMode = ToolMode::SCN_SCALE;
+    }
 
 
 };

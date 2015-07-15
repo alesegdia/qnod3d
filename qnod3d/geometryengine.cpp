@@ -97,13 +97,13 @@ void GeometryEngine::initNodeGeometry(QOpenGLShaderProgram *program)
     quintptr offset = 0;
 
     int vertexLocation = program->attributeLocation("a_position");
-    program->enableAttributeArray(vertexLocation);
-    program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, sizeof(VertexData));
-
-    offset += sizeof(QVector3D);
-
     int texcoordLocation = program->attributeLocation("a_texcoord");
+
+    program->enableAttributeArray(vertexLocation);
     program->enableAttributeArray(texcoordLocation);
+
+    program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, sizeof(VertexData));
+    offset += sizeof(QVector3D);
     program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
 
     m_modelsBuffer.bind();
@@ -133,11 +133,11 @@ void GeometryEngine::drawNodeGeometry()
     QMatrix4x4 m;
 
     m.setToIdentity();
-    m.translate(-0.5,0,0);
+    m.translate(-3,0,0);
     buf.write(((char*)m.constData()), m44size);
 
     m.setToIdentity();
-    m.translate(0.5,0,0);
+    m.translate(3,0,0);
     buf.write(((char*)m.constData()), m44size);
 
     buf.close();

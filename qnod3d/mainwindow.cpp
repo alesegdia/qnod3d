@@ -17,6 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
     this->qglwidget->setSizePolicy(qspRight);
 
     ui->qglcontainer->addWidget(this->qglwidget);
+    connect( this->ui->radio_scn_trns, SIGNAL(clicked(bool)), qglwidget, SLOT(setTranslateSceneMode(bool)));
+    connect( this->ui->radio_scn_rotate, SIGNAL(clicked(bool)), qglwidget, SLOT(setRotateSceneMode(bool)));
+    connect( this->ui->radio_scn_scale, SIGNAL(clicked(bool)), qglwidget, SLOT(setScaleSceneMode(bool)));
 }
 
 MainWindow::~MainWindow()

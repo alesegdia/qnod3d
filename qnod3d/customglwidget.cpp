@@ -5,7 +5,8 @@
 CustomGLWidget::CustomGLWidget(QWidget *parent) :
     QOpenGLWidget(parent),
     m_geometries(0),
-    m_texture(0)
+    m_texture(0),
+    m_position(0,0,-10.f)
 {
     QSurfaceFormat format;
     format.setVersion(3,3);
@@ -38,7 +39,7 @@ void CustomGLWidget::initializeGL() {
 void CustomGLWidget::resizeGL(int w, int h)
 {
     qreal aspect = qreal(w) / qreal(h ? h : 1);
-    const qreal zNear = 3.0, zFar = 20.0, fov = 45.0;
+    const qreal zNear = 3.0, zFar = 50.0, fov = 45.0;
     m_projection.setToIdentity();
     m_projection.perspective(fov, aspect, zNear, zFar);
 }
@@ -48,9 +49,10 @@ void CustomGLWidget::paintGL() {
     m_texture->bind();
 
     QMatrix4x4 matrix;
-    matrix.translate(0.0, 0.0, -10.0);
+    matrix.translate(m_position.x(), m_position.y(), m_position.z());
     matrix.rotate(m_rotation);
-    m_program.setUniformValue("mvp_matrix", m_projection * matrix);
+    m_program.setUniformValue("projectionMatrix", m_projection);
+    m_program.setUniformValue("viewMatrix", matrix);
     m_program.setUniformValue("texture", 0);
     m_program.setUniformValue("node_size", m_nodeSize);
     m_program.bind();
@@ -95,7 +97,20 @@ void CustomGLWidget::mouseMoveEvent(QMouseEvent *e)
 {
     if( m_pressed ) {
         QPointF mousePos = e->localPos();
-        m_rotation = m_rotation.fromEulerAngles(QVector3D(-mousePos.y(),mousePos.x(),0.f));
+        switch( toolMode ) {
+        case ToolMode::SCN_ROTATE:
+            m_rotation *= QQuaternion::fromEulerAngles(QVector3D(-(mousePos.y()-m_mousePressPosition.y()),(mousePos.x()-m_mousePressPosition.x()),0.f));
+            m_mousePressPosition = QVector2D(e->localPos());
+            break;
+        case ToolMode::SCN_TRANSLATE:
+            m_position += (QVector2D(e->localPos())-m_mousePressPosition)/40;
+            m_mousePressPosition = QVector2D(e->localPos());
+            break;
+        case ToolMode::SCN_SCALE:
+            m_position.setZ(m_position.z() + (e->localPos().y() - m_mousePressPosition.y())/1000.f);
+            break;
+        }
+
         update();
     }
 }
