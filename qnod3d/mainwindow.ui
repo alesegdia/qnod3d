@@ -26,30 +26,23 @@
       <item>
        <layout class="QVBoxLayout" name="toolboxcontainer">
         <item>
-         <widget class="QPushButton" name="pushButton_4">
+         <widget class="QRadioButton" name="radio_scn_trns">
           <property name="text">
-           <string>PushButton</string>
+           <string>Translate</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_3">
+         <widget class="QRadioButton" name="radio_scn_rotate">
           <property name="text">
-           <string>PushButton</string>
+           <string>Rotate</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QRadioButton" name="radio_scn_scale">
           <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>PushButton</string>
+           <string>Scale</string>
           </property>
          </widget>
         </item>
@@ -68,7 +61,7 @@
      <x>0</x>
      <y>0</y>
      <width>449</width>
-     <height>26</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
