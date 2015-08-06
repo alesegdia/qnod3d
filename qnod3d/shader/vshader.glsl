@@ -1,7 +1,10 @@
+#version 130
+
 #ifdef GL_ES
 precision mediump int;
 precision mediump float;
 #endif
+
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
@@ -15,7 +18,8 @@ varying vec2 v_texcoord;
 
 void main()
 {
-    a_position.xy = a_position.xy * node_size;
-    gl_Position = projectionMatrix * viewMatrix * a_modelMatrix * a_position;
+    vec4 pos2 = a_position;
+    pos2.xy = a_position.xy * node_size;
+    gl_Position = projectionMatrix * viewMatrix * a_modelMatrix * pos2;
     v_texcoord = a_texcoord;
 }
