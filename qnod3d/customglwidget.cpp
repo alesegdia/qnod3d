@@ -120,7 +120,10 @@ void CustomGLWidget::mouseMoveEvent(QMouseEvent *e)
             m_position += d/40;
             break;
         case ToolMode::SCN_SCALE:
-            m_scale += (e->localPos().y() - m_mousePressPosition.y())/1000.f;
+            m_scale += (e->localPos().y() - m_mousePressPosition.y()) * m_scale/100.f;
+            if( m_scale < 0 ) {
+                m_scale = 0;
+            }
             break;
         }
 
