@@ -10,6 +10,7 @@
 #include <QOpenGLFunctions_3_3_Core>
 
 #include "geometryengine.h"
+#include "nodefactory.h"
 
 enum ToolMode {
     SCN_TRANSLATE,
@@ -41,6 +42,8 @@ private:
     QOpenGLShaderProgram m_program;
     QOpenGLTexture *m_texture;
     QOpenGLFunctions_3_3_Core *m_gl330;
+
+    NodeFactory m_nodeFactory;
 
     // node geometry
     GeometryEngine *m_geometries;

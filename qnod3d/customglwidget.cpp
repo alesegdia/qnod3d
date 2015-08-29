@@ -3,6 +3,8 @@
 #include <QMouseEvent>
 #include <QtGlobal>
 
+#include "node.h"
+
 CustomGLWidget::CustomGLWidget(QWidget *parent) :
     QOpenGLWidget(parent),
     m_texture(0),
@@ -15,6 +17,12 @@ CustomGLWidget::CustomGLWidget(QWidget *parent) :
     format.setProfile(QSurfaceFormat::CoreProfile);
     setFormat(format);
     create();
+
+    m_nodeFactory.makeNode( -3, -4,  0,  0 );
+    m_nodeFactory.makeNode( -3,  4,  0,  0 );
+    m_nodeFactory.makeNode(  3, -4,  0,  0 );
+    m_nodeFactory.makeNode(  3,  4,  0,  0 );
+
 }
 
 CustomGLWidget::~CustomGLWidget()
@@ -34,7 +42,6 @@ void CustomGLWidget::initializeGL() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     m_geometries = new GeometryEngine(&(this->m_program), m_gl330);
-
 }
 
 void CustomGLWidget::resizeGL(int w, int h)
@@ -62,7 +69,12 @@ void CustomGLWidget::paintGL()
     m_program.setUniformValue("node_size", m_nodeSize);
     m_program.bind();
 
-    m_geometries->drawNodeGeometry();
+    m_geometries->beginBatch();
+    for( Node* n : m_nodeFactory )
+    {
+        m_geometries->drawNodeGeometry(n);
+    }
+    m_geometries->endBatch();
 }
 
 void CustomGLWidget::initShaders()
