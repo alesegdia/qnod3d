@@ -24,29 +24,7 @@
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <layout class="QVBoxLayout" name="toolboxcontainer">
-        <item>
-         <widget class="QRadioButton" name="radio_scn_trns">
-          <property name="text">
-           <string>Translate</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radio_scn_rotate">
-          <property name="text">
-           <string>Rotate</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radio_scn_scale">
-          <property name="text">
-           <string>Scale</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <layout class="QVBoxLayout" name="toolboxcontainer"/>
       </item>
       <item>
        <layout class="QGridLayout" name="qglcontainer"/>

@@ -54,20 +54,6 @@ private:
     QOpenGLFunctions_3_3_Core *m_gl330;
     ToolMode toolMode;
 
-public slots:
-    void setTranslateSceneMode(bool k) {
-        toolMode = ToolMode::SCN_TRANSLATE;
-    }
-
-    void setRotateSceneMode(bool k) {
-        toolMode = ToolMode::SCN_ROTATE;
-    }
-
-    void setScaleSceneMode(bool k) {
-        toolMode = ToolMode::SCN_SCALE;
-    }
-
-
 };
 
 #endif // CUSTOMGLWIDGET_H
