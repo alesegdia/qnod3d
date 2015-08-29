@@ -1,7 +1,7 @@
 #include "node.h"
 
 Node::Node(int x, int y, int w, int h)
-    : m_size(x,y), m_position(w,h)
+    : m_size(w,h), m_position(x,y)
 {}
 
 
