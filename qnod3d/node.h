@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <QVector2D>
+#include <QMatrix4x4>
 
 class Node
 {
