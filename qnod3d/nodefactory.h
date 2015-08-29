@@ -17,6 +17,9 @@ public:
 
     Node* makeNode( int x, int y, int w, int h );
 
+    QList<Node*>::iterator begin();
+    QList<Node*>::iterator end();
+
     QList<QMatrix4x4>&& collectModels();
 
 private:

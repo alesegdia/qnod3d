@@ -17,6 +17,16 @@ Node *NodeFactory::makeNode(int x, int y, int w, int h) {
     return n;
 }
 
+QList<Node*>::iterator NodeFactory::begin()
+{
+    return m_nodeList.begin();
+}
+
+QList<Node*>::iterator NodeFactory::end()
+{
+    return m_nodeList.end();
+}
+
 QList<QMatrix4x4> &&NodeFactory::collectModels() {
     QList<QMatrix4x4> models;
     for( QList<Node*>::iterator it = m_nodeList.begin(); it != m_nodeList.end(); it++) {
