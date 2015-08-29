@@ -37,22 +37,29 @@ protected:
     void initTextures();
 
 private:
+
     QOpenGLShaderProgram m_program;
+    QOpenGLTexture *m_texture;
+    QOpenGLFunctions_3_3_Core *m_gl330;
+
+    // node geometry
     GeometryEngine *m_geometries;
+    QVector2D m_nodeSize = QVector2D(2,3);
+
+    // camera transform
     QMatrix4x4 m_projection;
     QMatrix4x4 m_view;
-    QOpenGLTexture *m_texture;
+
+    // scene transform
     QQuaternion m_rotation_x;
     QQuaternion m_rotation_y;
     QVector3D m_position;
-
     float m_scale = 1;
+
+    // tool objects
     bool m_pressed = false;
     QVector2D m_mousePressPosition;
-    QVector2D m_nodeSize = QVector2D(2,3);
-
-    QOpenGLFunctions_3_3_Core *m_gl330;
-    ToolMode toolMode;
+    ToolMode m_toolMode;
 
 };
 

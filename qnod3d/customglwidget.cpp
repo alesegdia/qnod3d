@@ -94,11 +94,11 @@ void CustomGLWidget::mousePressEvent(QMouseEvent* e)
 {
     m_pressed = true;
     if( e->button() == Qt::MouseButton::RightButton ) {
-        toolMode = ToolMode::SCN_SCALE;
+        m_toolMode = ToolMode::SCN_SCALE;
     } else if( e->button() == Qt::MouseButton::LeftButton ) {
-        toolMode = ToolMode::SCN_TRANSLATE;
+        m_toolMode = ToolMode::SCN_TRANSLATE;
     } else if( e->button() == Qt::MouseButton::MidButton ) {
-        toolMode = ToolMode::SCN_ROTATE;
+        m_toolMode = ToolMode::SCN_ROTATE;
     }
     m_mousePressPosition = QVector2D(e->localPos());
 }
@@ -109,7 +109,7 @@ void CustomGLWidget::mouseMoveEvent(QMouseEvent *e)
         QPointF mousePos = e->localPos();
         QVector2D d = QVector2D(mousePos) - m_mousePressPosition;
         d.setY(-d.y());
-        switch( toolMode ) {
+        switch( m_toolMode ) {
         case ToolMode::SCN_ROTATE:
             m_rotation_x *= QQuaternion::fromEulerAngles(QVector3D(0.f,(mousePos.x()-m_mousePressPosition.x()),0.f));
             m_rotation_y *= QQuaternion::fromEulerAngles(QVector3D((mousePos.y()-m_mousePressPosition.y()),0.f,0.f));
