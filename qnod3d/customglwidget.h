@@ -46,6 +46,7 @@ private:
     QQuaternion m_rotation_y;
     QVector3D m_position;
 
+    float m_scale = 1;
     bool m_pressed = false;
     QVector2D m_mousePressPosition;
     QVector2D m_nodeSize = QVector2D(2,3);
