@@ -42,7 +42,8 @@ private:
     QMatrix4x4 m_projection;
     QMatrix4x4 m_view;
     QOpenGLTexture *m_texture;
-    QQuaternion m_rotation;
+    QQuaternion m_rotation_x;
+    QQuaternion m_rotation_y;
     QVector3D m_position;
 
     bool m_pressed = false;

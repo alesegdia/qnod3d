@@ -50,7 +50,8 @@ void CustomGLWidget::paintGL() {
 
     QMatrix4x4 matrix;
     matrix.translate(m_position.x(), m_position.y(), m_position.z());
-    matrix.rotate(m_rotation);
+    matrix.rotate(m_rotation_x);
+    matrix.rotate(m_rotation_y);
     m_program.setUniformValue("projectionMatrix", m_projection);
     m_program.setUniformValue("viewMatrix", matrix);
     m_program.setUniformValue("texture", 0);
@@ -97,13 +98,18 @@ void CustomGLWidget::mouseMoveEvent(QMouseEvent *e)
 {
     if( m_pressed ) {
         QPointF mousePos = e->localPos();
+        QVector2D d = QVector2D(mousePos) - m_mousePressPosition;
+        d.setY(-d.y());
         switch( toolMode ) {
         case ToolMode::SCN_ROTATE:
-            m_rotation *= QQuaternion::fromEulerAngles(QVector3D(-(mousePos.y()-m_mousePressPosition.y()),(mousePos.x()-m_mousePressPosition.x()),0.f));
+            m_rotation_x *= QQuaternion::fromEulerAngles(QVector3D(0.f,(mousePos.x()-m_mousePressPosition.x()),0.f));
+            m_rotation_y *= QQuaternion::fromEulerAngles(QVector3D((mousePos.y()-m_mousePressPosition.y()),0.f,0.f));
             m_mousePressPosition = QVector2D(e->localPos());
             break;
         case ToolMode::SCN_TRANSLATE:
-            m_position += (QVector2D(e->localPos())-m_mousePressPosition)/40;
+            mousePos.setY(-mousePos.y());
+            d.setY(d.y());
+            m_position += d/40;
             m_mousePressPosition = QVector2D(e->localPos());
             break;
         case ToolMode::SCN_SCALE:
