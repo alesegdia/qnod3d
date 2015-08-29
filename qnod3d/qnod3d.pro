@@ -7,12 +7,16 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     customglwidget.cpp \
     geometryengine.cpp \
-    nodefactory.cpp
+    nodefactory.cpp \
+    itool.cpp \
+    node.cpp
 
 HEADERS  += mainwindow.h \
     customglwidget.h \
     geometryengine.h \
-    nodefactory.h
+    nodefactory.h \
+    itool.h \
+    node.h
 
 FORMS    += mainwindow.ui
 
