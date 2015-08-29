@@ -1,11 +1,12 @@
 #include "customglwidget.h"
 
 #include <QMouseEvent>
+#include <QtGlobal>
 
 CustomGLWidget::CustomGLWidget(QWidget *parent) :
     QOpenGLWidget(parent),
-    m_geometries(0),
     m_texture(0),
+    m_geometries(0),
     m_position(0,0,-10.f)
 {
     QSurfaceFormat format;
@@ -44,21 +45,23 @@ void CustomGLWidget::resizeGL(int w, int h)
     m_projection.perspective(fov, aspect, zNear, zFar);
 }
 
-void CustomGLWidget::paintGL() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    m_texture->bind();
-
+void CustomGLWidget::paintGL()
+{
     QMatrix4x4 matrix;
     matrix.translate(m_position.x(), m_position.y(), m_position.z());
     matrix.rotate(m_rotation_x);
     matrix.rotate(m_rotation_y);
     matrix.scale(m_scale);
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    m_texture->bind();
+
     m_program.setUniformValue("projectionMatrix", m_projection);
     m_program.setUniformValue("viewMatrix", matrix);
     m_program.setUniformValue("texture", 0);
     m_program.setUniformValue("node_size", m_nodeSize);
     m_program.bind();
+
     m_geometries->drawNodeGeometry();
 }
 
@@ -106,28 +109,25 @@ void CustomGLWidget::mousePressEvent(QMouseEvent* e)
 void CustomGLWidget::mouseMoveEvent(QMouseEvent *e)
 {
     if( m_pressed ) {
-        QPointF mousePos = e->localPos();
-        QVector2D d = QVector2D(mousePos) - m_mousePressPosition;
-        d.setY(-d.y());
+        QVector2D deltaMousePos = QVector2D( e->localPos() ) - m_mousePressPosition;
+        deltaMousePos.setY( -deltaMousePos.y() );
         switch( m_toolMode ) {
         case ToolMode::SCN_ROTATE:
-            m_rotation_x *= QQuaternion::fromEulerAngles(QVector3D(0.f,(mousePos.x()-m_mousePressPosition.x()),0.f));
-            m_rotation_y *= QQuaternion::fromEulerAngles(QVector3D((mousePos.y()-m_mousePressPosition.y()),0.f,0.f));
+            m_rotation_x *= QQuaternion::fromEulerAngles(
+                        QVector3D( 0.f, deltaMousePos.x(), 0.f ) );
+            m_rotation_y *= QQuaternion::fromEulerAngles(
+                        QVector3D( - deltaMousePos.y(), 0.f, 0.f ) );
             break;
         case ToolMode::SCN_TRANSLATE:
-            mousePos.setY(-mousePos.y());
-            d.setY(d.y());
-            m_position += d/40;
+            m_position += deltaMousePos / 40;
             break;
         case ToolMode::SCN_SCALE:
-            m_scale += (e->localPos().y() - m_mousePressPosition.y()) * m_scale/100.f;
-            if( m_scale < 0 ) {
-                m_scale = 0;
-            }
+            m_scale += deltaMousePos.y() * m_scale / 100.f;
+            m_scale = qMax( 0.f, m_scale );
             break;
         }
 
-        m_mousePressPosition = QVector2D(e->localPos());
+        m_mousePressPosition = QVector2D( e->localPos() );
         update();
     }
 }
