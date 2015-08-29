@@ -4,6 +4,8 @@
 #include <QVector3D>
 #include <QBuffer>
 
+#include "node.h"
+
 struct VertexData
 {
     QVector3D position;
@@ -14,14 +16,14 @@ struct VertexData
 GeometryEngine::GeometryEngine(QOpenGLShaderProgram *program, QOpenGLFunctions_3_3_Core *gl330)
     : m_indexBuf(QOpenGLBuffer::IndexBuffer),
       m_arrayBuf(QOpenGLBuffer::VertexBuffer),
-      m_modelsBuffer(QOpenGLBuffer::VertexBuffer)
+      m_gpuModelsBuffer(QOpenGLBuffer::VertexBuffer)
 {
     initializeOpenGLFunctions();
 
     this->m_gl330 = gl330;
     m_arrayBuf.create();
     m_indexBuf.create();
-    m_modelsBuffer.create();
+    m_gpuModelsBuffer.create();
 
     initNodeGeometry(program);
 }
@@ -31,7 +33,6 @@ GeometryEngine::~GeometryEngine()
     m_arrayBuf.destroy();
     m_indexBuf.destroy();
 }
-//! [0]
 
 void GeometryEngine::initNodeGeometry(QOpenGLShaderProgram *program)
 {
@@ -106,7 +107,7 @@ void GeometryEngine::initNodeGeometry(QOpenGLShaderProgram *program)
     offset += sizeof(QVector3D);
     program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
 
-    m_modelsBuffer.bind();
+    m_gpuModelsBuffer.bind();
 
     int modelLocation = program->attributeLocation("a_modelMatrix");
 
@@ -116,33 +117,37 @@ void GeometryEngine::initNodeGeometry(QOpenGLShaderProgram *program)
         m_gl330->glVertexAttribDivisor( modelLocation + i, 1 );
     }
 
-    m_modelsBuffer.release();
+    m_gpuModelsBuffer.release();
     m_vao->release();
     program->release();
 }
 
-void GeometryEngine::drawNodeGeometry()
+void GeometryEngine::beginBatch()
 {
+    m_numNodesToRender = 0;
     m_vao->bind();
-    m_modelsBuffer.bind();
+    m_gpuModelsBuffer.bind();
 
-    QBuffer buf;
-    buf.open(QIODevice::WriteOnly);
+    m_modelsBuffer.buffer().clear();
+    m_modelsBuffer.open(QIODevice::WriteOnly);
+}
 
+void GeometryEngine::drawNodeGeometry(Node* n)
+{
     int m44size = 4 * sizeof(QVector4D);
     QMatrix4x4 m;
 
     m.setToIdentity();
-    m.translate(-3,0,0);
-    buf.write(((char*)m.constData()), m44size);
+    m.translate( n->m_position.x(), n->m_position.y(), 0 );
+    m_modelsBuffer.write(((char*)m.constData()), m44size);
+    m_numNodesToRender++;
 
-    m.setToIdentity();
-    m.translate(3,0,0);
-    buf.write(((char*)m.constData()), m44size);
+}
 
-    buf.close();
+void GeometryEngine::endBatch()
+{
+    m_modelsBuffer.close();
 
-    m_modelsBuffer.allocate(buf.data().constData(), 4*sizeof(QVector4D)*2);
-    m_gl330->glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 34, 2);
-
+    m_gpuModelsBuffer.allocate(m_modelsBuffer.data().constData(), 4*sizeof(QVector4D) * m_numNodesToRender);
+    m_gl330->glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 34, m_numNodesToRender);
 }
