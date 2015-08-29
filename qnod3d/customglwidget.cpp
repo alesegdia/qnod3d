@@ -114,7 +114,7 @@ void CustomGLWidget::mouseMoveEvent(QMouseEvent *e)
         switch( m_toolMode ) {
         case ToolMode::SCN_ROTATE:
             m_rotation_x *= QQuaternion::fromEulerAngles(
-                        QVector3D( 0.f, deltaMousePos.x(), 0.f ) );
+                        QVector3D(   0.f, deltaMousePos.x(), 0.f ) );
             m_rotation_y *= QQuaternion::fromEulerAngles(
                         QVector3D( - deltaMousePos.y(), 0.f, 0.f ) );
             break;
