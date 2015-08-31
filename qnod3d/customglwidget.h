@@ -12,12 +12,8 @@
 #include "geometryengine.h"
 #include "nodefactory.h"
 #include "scenetransform.h"
+#include "itool.h"
 
-enum ToolMode {
-    SCN_TRANSLATE,
-    SCN_ROTATE,
-    SCN_SCALE
-};
 
 class CustomGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -46,6 +42,8 @@ private:
 
     NodeFactory m_nodeFactory;
 
+    ITool* currentTool;
+
     // node geometry
     GeometryEngine *m_geometries;
     QVector2D m_nodeSize = QVector2D(2,3);
@@ -54,12 +52,7 @@ private:
     QMatrix4x4 m_projection;
     QMatrix4x4 m_view;
 
-    SceneTransform cam;
-
-    // tool objects
-    bool m_pressed = false;
-    QVector2D m_mousePressPosition;
-    ToolMode m_toolMode;
+    SceneTransform m_sceneTransform;
 
 };
 

@@ -4,6 +4,7 @@
 #include <QtGlobal>
 
 #include "node.h"
+#include "scenetransformtool.h"
 
 CustomGLWidget::CustomGLWidget(QWidget *parent) :
     QOpenGLWidget(parent),
@@ -17,6 +18,7 @@ CustomGLWidget::CustomGLWidget(QWidget *parent) :
     setFormat(format);
     create();
 
+    currentTool = new SceneTransformTool( m_sceneTransform );
     m_nodeFactory.makeNode( -3, -4,  0,  0 );
     m_nodeFactory.makeNode( -3,  4,  0,  0 );
     m_nodeFactory.makeNode(  3, -4,  0,  0 );
@@ -54,10 +56,10 @@ void CustomGLWidget::resizeGL(int w, int h)
 void CustomGLWidget::paintGL()
 {
     QMatrix4x4 matrix;
-    matrix.translate(cam.m_position.x(), cam.m_position.y(), cam.m_position.z());
-    matrix.rotate(cam.m_rotation_x);
-    matrix.rotate(cam.m_rotation_y);
-    matrix.scale(cam.m_scale);
+    matrix.translate(m_sceneTransform.m_position.x(), m_sceneTransform.m_position.y(), m_sceneTransform.m_position.z());
+    matrix.rotate(m_sceneTransform.m_rotation_x);
+    matrix.rotate(m_sceneTransform.m_rotation_y);
+    matrix.scale(m_sceneTransform.m_scale);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_texture->bind();
@@ -106,57 +108,16 @@ void CustomGLWidget::initTextures()
 
 void CustomGLWidget::mousePressEvent(QMouseEvent* e)
 {
-    m_pressed = true;
-
-    if( e->button() == Qt::MouseButton::RightButton )
-    {
-        m_toolMode = ToolMode::SCN_SCALE;
-    }
-    else if( e->button() == Qt::MouseButton::LeftButton )
-    {
-        m_toolMode = ToolMode::SCN_TRANSLATE;
-    }
-    else if( e->button() == Qt::MouseButton::MidButton )
-    {
-        m_toolMode = ToolMode::SCN_ROTATE;
-    }
-    m_mousePressPosition = QVector2D(e->localPos());
+    currentTool->mousePressEvent(e);
 }
 
 void CustomGLWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    if( m_pressed )
-    {
-        QVector2D deltaMousePos = QVector2D( e->localPos() ) - m_mousePressPosition;
-        deltaMousePos.setY( -deltaMousePos.y() );
-
-        switch( m_toolMode )
-        {
-
-        case ToolMode::SCN_ROTATE:
-            cam.m_rotation_x *= QQuaternion::fromEulerAngles(
-                        QVector3D(   0.f, deltaMousePos.x(), 0.f ) );
-            cam.m_rotation_y *= QQuaternion::fromEulerAngles(
-                        QVector3D( - deltaMousePos.y(), 0.f, 0.f ) );
-            break;
-
-        case ToolMode::SCN_TRANSLATE:
-            cam.m_position += deltaMousePos / 40;
-            break;
-
-        case ToolMode::SCN_SCALE:
-            cam.m_scale += deltaMousePos.y() * cam.m_scale / 100.f;
-            cam.m_scale = qMax( 0.f, cam.m_scale );
-            break;
-
-        }
-
-        m_mousePressPosition = QVector2D( e->localPos() );
-        update();
-    }
+    currentTool->mouseMoveEvent(e);
+    update();
 }
 
 void CustomGLWidget::mouseReleaseEvent(QMouseEvent* e)
 {
-    m_pressed = false;
+    currentTool->mousePressEvent(e);
 }
