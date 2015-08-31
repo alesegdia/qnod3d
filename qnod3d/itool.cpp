@@ -5,3 +5,8 @@ ITool::ITool()
 
 }
 
+ITool::~ITool()
+{
+
+}
+
