@@ -11,6 +11,7 @@
 
 #include "geometryengine.h"
 #include "nodefactory.h"
+#include "scenetransform.h"
 
 enum ToolMode {
     SCN_TRANSLATE,
@@ -53,11 +54,7 @@ private:
     QMatrix4x4 m_projection;
     QMatrix4x4 m_view;
 
-    // scene transform
-    QQuaternion m_rotation_x;
-    QQuaternion m_rotation_y;
-    QVector3D m_position;
-    float m_scale = 1;
+    SceneTransform cam;
 
     // tool objects
     bool m_pressed = false;

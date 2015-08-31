@@ -8,8 +8,7 @@
 CustomGLWidget::CustomGLWidget(QWidget *parent) :
     QOpenGLWidget(parent),
     m_texture(0),
-    m_geometries(0),
-    m_position(0,0,-10.f)
+    m_geometries(0)
 {
     QSurfaceFormat format;
     format.setVersion(3,3);
@@ -55,10 +54,10 @@ void CustomGLWidget::resizeGL(int w, int h)
 void CustomGLWidget::paintGL()
 {
     QMatrix4x4 matrix;
-    matrix.translate(m_position.x(), m_position.y(), m_position.z());
-    matrix.rotate(m_rotation_x);
-    matrix.rotate(m_rotation_y);
-    matrix.scale(m_scale);
+    matrix.translate(cam.m_position.x(), cam.m_position.y(), cam.m_position.z());
+    matrix.rotate(cam.m_rotation_x);
+    matrix.rotate(cam.m_rotation_y);
+    matrix.scale(cam.m_scale);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_texture->bind();
@@ -135,19 +134,19 @@ void CustomGLWidget::mouseMoveEvent(QMouseEvent *e)
         {
 
         case ToolMode::SCN_ROTATE:
-            m_rotation_x *= QQuaternion::fromEulerAngles(
+            cam.m_rotation_x *= QQuaternion::fromEulerAngles(
                         QVector3D(   0.f, deltaMousePos.x(), 0.f ) );
-            m_rotation_y *= QQuaternion::fromEulerAngles(
+            cam.m_rotation_y *= QQuaternion::fromEulerAngles(
                         QVector3D( - deltaMousePos.y(), 0.f, 0.f ) );
             break;
 
         case ToolMode::SCN_TRANSLATE:
-            m_position += deltaMousePos / 40;
+            cam.m_position += deltaMousePos / 40;
             break;
 
         case ToolMode::SCN_SCALE:
-            m_scale += deltaMousePos.y() * m_scale / 100.f;
-            m_scale = qMax( 0.f, m_scale );
+            cam.m_scale += deltaMousePos.y() * cam.m_scale / 100.f;
+            cam.m_scale = qMax( 0.f, cam.m_scale );
             break;
 
         }
