@@ -3,7 +3,7 @@
 
 #include <QVector2D>
 
-#include "itool.h"
+#include "mousedragtool.h"
 #include "scenetransform.h"
 
 enum ToolMode {
@@ -12,20 +12,18 @@ enum ToolMode {
     SCN_SCALE
 };
 
-class SceneTransformTool : public ITool
+class SceneTransformTool : public MouseDragTool
 {
 public:
     SceneTransformTool( SceneTransform& sceneTransform );
 
-    void mousePressEvent(QMouseEvent *e) override;
-    void mouseReleaseEvent(QMouseEvent *e) override;
-    void mouseMoveEvent(QMouseEvent *e) override;
+    void mousePressed(QMouseEvent *e) override;
+    void mouseReleased(QMouseEvent *e) override;
+    void mouseDragged(QMouseEvent *e) override;
 
 private:
     SceneTransform& m_sceneTransform;
-    bool m_pressed;
     ToolMode m_toolMode;
-    QVector2D m_mousePressPosition;
 
 };
 
